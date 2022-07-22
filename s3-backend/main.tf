@@ -29,22 +29,40 @@ provider "aws" {
 resource "aws_s3_bucket" "terraform_state" {
   # TODO: change this to your own name! S3 bucket names must be *globally* unique.
   bucket = "andrei-terraform-up-and-running-state"
+}
 
-  # Enable versioning so we can see the full revision history of our
-  # state files
-  versioning {
-    enabled = true
+
+# ACL config
+resource "aws_s3_bucket_acl" "terraform_state_acl" {
+  bucket = aws_s3_bucket.terraform_state.id
+  acl    = "private"
+}
+
+# Enable versioning in s3 bucket
+resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
+  bucket = aws_s3_bucket.terraform_state.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
-  # Enable server-side encryption by default
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+resource "aws_kms_key" "terraform_state_key" {
+  description             = "This key is used to encrypt bucket objects"
+  deletion_window_in_days = 10
+}
+
+# Enable s3 bucket encryption
+resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+  bucket = aws_s3_bucket.terraform_state.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.terraform_state_key.arn
+      sse_algorithm     = "aws:kms"
     }
   }
 }
+
 
 # ------------------------------------------------------------------------------
 # CREATE THE DYNAMODB TABLE
