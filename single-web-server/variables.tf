@@ -15,3 +15,9 @@ variable "server_port" {
   type        = number
   default     = 8080
 }
+
+variable "name_prefix" {
+  type        = string
+  description = "Prefix used in all names"
+  default     = "terraform"
+}
