@@ -28,7 +28,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "terraform_state" {
   # TODO: change this to your own name! S3 bucket names must be *globally* unique.
-  bucket = "terraform-up-and-running-state"
+  bucket = "andrei-terraform-up-and-running-state"
 
   # Enable versioning so we can see the full revision history of our
   # state files
