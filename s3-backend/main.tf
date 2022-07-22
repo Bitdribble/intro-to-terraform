@@ -79,28 +79,3 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 }
 
-
-# Install state on s3 back end
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "andrei-terraform-up-and-running-state"
-    key            = "global/s3/terraform.tfstate"
-    region         = "us-east-1"    # Replace this with your DynamoDB table name!
-    dynamodb_table = "terraform-up-and-running-locks"
-    encrypt        = true
-  }
-}
-
-
-# Example ec2 instance
-resource "aws_instance" "terraform-example" {
-  ami           = "ami-0cff7528ff583bf9a"
-  instance_type = "t3.micro"
-  subnet_id     = "subnet-018ff7cdfb49ea10f"
-  vpc_security_group_ids = ["sg-0d86c3198a766267f"]
-
-  tags = {
-    Name = "terraform_example"
-  }
-}
