@@ -1,0 +1,1 @@
+Example from freeCodeCamp.org: [Terraform Course - Automate your AWS Infrastructure](https://www.youtube.com/watch?v=SLB_c_ayRMo) (2020)
